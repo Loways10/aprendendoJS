@@ -3,6 +3,8 @@
     padding: 0;
     box-sizing: border-box;
     list-style: none;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    
 }
 header{
     background-color: #233056;
@@ -12,4 +14,62 @@ header div nav ul{
     display: flex;
     justify-content: center;
     gap: 25px;
+    color: white;
+    font-weight: lighter;
+}
+header div div{
+    text-align: right;
+
+}
+
+main{
+    padding: 0 20px;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+main div{
+    padding: 30px 0;
+}
+main div div p{
+    font-size: 16pt;
+    font-weight: bold;
+    
+}
+main div div h2{
+    padding: 40px 0 0 0;
+    font-size: 20pt;
+    font-weight: lighter;
+}
+main div div .main-but{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+main div div .main-but ul{
+    display: flex;
+    padding: 10px 0 0 0 ;
+    gap: 10px;
+}
+main div div .main-but ul .option-link{
+    cursor: pointer;
+    color: #84ba64;
+}
+main div div .main-but ul .option-link:hover{
+    color: white;
+    text-decoration: underline;
+}
+
+footer{
+    background-color: #233056;
+    text-align: center;
+    padding-top: 20px;
+    
+}
+footer div{
+    padding: 1em 10em;
+}
+footer div div p{
+    font-size: 10pt;
+    text-align: justify;
 }
