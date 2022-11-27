@@ -14,6 +14,7 @@ console.log(notas)
 
 notas.push("Alunos", 6, true, {id: 10})
 console.log(notas)
+
 const nomes = new Array()
 const p = document.getElementById('msg')
 
