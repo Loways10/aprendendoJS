@@ -1,64 +1,92 @@
 const url = 'https://jsonplaceholder.typicode.com/posts'
+const urlParams = new URLSearchParams(window.location.search)
+
 let itens = 0
 let number = 0
-let data = ''
-const qntArtigos = 20
+let data = '' // Dados de todos os posts
+const qntArtigos = 15
 
-const allPosts = async () =>{
+
+const allPosts = async () => {
     if(!data){
         const response = await fetch(`${url}`)
         data = await response.json()
-        // console.log(data)
-        // quantas paginas devem ter para aparecer todos os artigos
+        console.log(data)
+        // Quantas paginas devem ter para aparecer todos os artigos
         itens = Math.ceil(data.length / qntArtigos) // 20 artigos por pagina
-        // console.log(itens)
+        //console.log(itens)
     }
-
-
+    
+    
     const article = document.querySelector('main article')
     article.innerHTML = ''
 
-    for(let i = number; i < qntArtigos + number; i++){
-        // console.log(data[i].id, data[i].userId, data[i].title, data[i].body)
-        const a = document.createElement("a")
-        const div = document.createElement("div")
-        const h3 = document.createElement("h3")
-        const p = document.createElement("p")
-        const icon = document.createElement("img")
+    for(let i = number; i < (qntArtigos + number); i++){
+        //console.log(data[i].id, data[i].userId, data[i].title, data[i].body)
+        const a = document.createElement('a')
+        const div = document.createElement('div')
+        const div1 = document.createElement('div')
+        const div2 = document.createElement('div')
+        const h3 = document.createElement('h3')
+        const p = document.createElement('p')
+        const icon = document.createElement('img')
 
-        h3.innerText = `${data[i].id} ${data[i].title}`
+        const com = document.createElement('span')
+
+        const qntComments = await returnComments(data[i].id)
+        //console.log(qntComments.length)
+
+        h3.innerText = `${data[i].title}`
         p.innerText = data[i].body.replaceAll('\n', '')
 
-        div.appendChild(h3)
-        div.appendChild(p)
+        com.innerHTML = `${qntComments.length} Comentarios`
+
+        icon.setAttribute('src', await returnImg(data[i].userId))
+        
+        //console.log(await returnImg(data[i].userId))
+
+        
+
+        div1.appendChild(icon)
+
+        div2.appendChild(h3)
+        div2.appendChild(p)
+        div2.appendChild(com)
+
+        div.appendChild(div1)
+        div.appendChild(div2)
+
         a.appendChild(div)
-        a.setAttribute('href', 'post.html?id=1')
+        a.setAttribute('href', `post.html?id=${data[i].id}`)
 
         document.querySelector('main article').appendChild(a)
+
+        removeView()
     }
     
     const buttons = document.querySelectorAll('main #buttons button')
-    if(buttons.length === 0){
+    //console.log(buttons)
+    if(!buttons.length){
         for(let i = 0; i < itens; i++){
             const button = document.createElement('button')
-            button.innerText = i + 1
-            button.setAttribute('name', i)
+            button.innerText = i + 1 // exibe i + 1
+            button.setAttribute('name', i) // nome = i
             button.addEventListener('click', alterPage)
             document.querySelector('main #buttons').appendChild(button)
         }
     }
+    
 }
 
-
 function alterPage(e){
-    // console.log(e.target.name)
+    //console.log(e.target.name)
     number = qntArtigos
     number = number * Number(e.target.name)
     allPosts()
     window.scrollTo(0, 0)
 }
 
-const readPost = async () => {
+const readPost = () => {
     fetch(`${url}/${urlParams.get('id')}`)
     .then((response) => response.json())
     .then((data) => {
@@ -72,19 +100,98 @@ const readPost = async () => {
         const div = document.createElement('div')
         const h3 = document.createElement('h3')
         const p = document.createElement('p')
+        const icon = document.createElement('img')
+
+        returnImg(data.userId)
+        .then((res) => {
+            icon.setAttribute('src', res)
+        })
+        
 
         h3.innerText = `${data.title}`
         p.innerText = `${data.body.replaceAll('\n', '')}`
 
+        div.appendChild(icon)
         div.appendChild(h3)
         div.appendChild(p)
 
         article.appendChild(div)
 
+        listCommentsPost(data.id)
 
+        removeView()
     })
     .catch((error) => {
         console.log(error)
     })
 }
-URLSearchParams.get('id')? readPost() : allPosts()
+
+const listCommentsPost = (id) => {
+    fetch(`${url}/${id}/comments`)
+    .then((response) => response.json())
+    .then((data) => {
+        //console.log(data)
+
+        for(let i = 0; i < data.length; i++){
+            //console.log(data[i].name, data[i].body, data[i].email, data[i].id, data[i].postId )
+            
+            const div = document.createElement('div')
+            const icon = document.createElement('img')
+            const name = document.createElement('p')
+            const email = document.createElement('p')
+            const msg = document.createElement('p')
+
+            name.innerText = `Nome: ${data[i].name}`
+            email.innerText = `Email: ${data[i].email}`
+            msg.innerText = `Comentario:\n ${data[i].body.replaceAll('\n', '')}`
+
+            returnImg(data[i].id)
+            .then((linkImg) => icon.setAttribute('src', linkImg))
+
+            div.appendChild(icon)
+            div.appendChild(name)
+            div.appendChild(email)
+            div.appendChild(msg)
+
+            document.querySelector('main section.content-comments').appendChild(div)
+        }
+
+        document.querySelector('main .c-loader').classList.add('hiden')
+        document.querySelector('main section.content-comments').classList.remove('hiden')
+    })
+    .catch((error) => console.log(error))
+}
+
+const returnImg = async (id) => {
+    try{
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+        const data = await response.json()
+        return data.sprites.front_default
+    }catch(error){
+        console.log(error)
+    }  
+}
+
+const returnComments = async (id) => {
+    const response = await fetch(`${url}/${id}/comments`)
+    return await response.json() 
+}
+
+function removeView(){
+    document.querySelector('div.loading').classList.add('hiden')
+    document.querySelector('main').classList.remove('hiden')
+}
+
+urlParams.get('id')? readPost() : allPosts()
+
+
+/* 
+artigos/paginas  = 20
+pagina 1
+comecar -> 20 *0
+finalizar -> 20
+pagina 2
+comaçar -> 20 * 1
+finalizar -> 40
+    
+*/
