@@ -11,7 +11,7 @@ const allPosts = async () => {
     if(!data){
         const response = await fetch(`${url}`)
         data = await response.json()
-        console.log(data)
+        // console.log(data)
         // Quantas paginas devem ter para aparecer todos os artigos
         itens = Math.ceil(data.length / qntArtigos) // 20 artigos por pagina
         //console.log(itens)
@@ -23,49 +23,18 @@ const allPosts = async () => {
 
     for(let i = number; i < (qntArtigos + number); i++){
         //console.log(data[i].id, data[i].userId, data[i].title, data[i].body)
-        const a = document.createElement('a')
-        const div = document.createElement('div')
-        const div1 = document.createElement('div')
-        const div2 = document.createElement('div')
-        const h3 = document.createElement('h3')
-        const p = document.createElement('p')
-        const icon = document.createElement('img')
-
-        const com = document.createElement('span')
-
-        const iconCom = document.createElement('span')
-        iconCom.classList.add('material-symbols-outlined')
-        iconCom.innerText = 'comment'
-
-        const qntComments = await returnComments(data[i].id)
+        
+        const comments = await returnComments(data[i].id)
         //console.log(qntComments.length)
 
-        h3.innerText = `${data[i].title}`
-        p.innerText = data[i].body.replaceAll('\n', '')
+        const title = data[i].title
+        const description = data[i].body.replaceAll('\n', '')
+        const imgUrl = await returnImg(data[i].userId)
+        const link = `post.html?id=${data[i].id}`
 
-        com.innerHTML = `${qntComments.length} <span class="material-symbols-outlined">comment</span>`
-
-        //com.appendChild(iconCom)
-
-        icon.setAttribute('src', await returnImg(data[i].userId))
-        
-        //console.log(await returnImg(data[i].userId))
-
-        
-
-        div1.appendChild(icon)
-
-        div2.appendChild(h3)
-        div2.appendChild(p)
-        div2.appendChild(com)
-
-        div.appendChild(div1)
-        div.appendChild(div2)
-
-        a.appendChild(div)
-        a.setAttribute('href', `post.html?id=${data[i].id}`)
-
-        document.querySelector('main article').appendChild(a)
+        const postCard = createPostCard({qtyComments: comments.length, title, description, imgUrl, link})
+        console.log(postCard)
+        document.querySelector('main article').appendChild(postCard)
 
         removeView()
     }
