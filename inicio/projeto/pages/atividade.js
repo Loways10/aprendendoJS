@@ -1,24 +1,25 @@
 const url = 'https://api-burb.onrender.com/api'
 const urlParams = new URLSearchParams(window.location.search)
 
-const searchPackage = async () => {
+const searchActivity = async () => {
     try{
-        const response = await fetch(`${url}/package/${urlParams.get('id')}`)
+        const response = await fetch(`${url}/activity/${urlParams.get('id')}`)
         const data = await response.json()
-        console.log(data.results)
-        showPackage(data.results)
+        // console.log(data.results)
+        showActivity(data.results)
     }catch(error){
         console.log(error.message)
     }
 }
 
-const showPackage = (data) => {
-    document.title = `Hotel - ${data.nome}`
+const showActivity = (data) => {
+    document.title = `Atividade - ${data.nome}`
 
-    document.querySelector('.estrela p').innerText = `Pacote ${data.estrelas} estrelas`
+    document.querySelector('.estrela p').innerText = `Atividade ${data.estrelas} estrelas`
     document.querySelector('.titulo .nome p').innerText = `${data.nome}` 
     document.querySelector('.titulo .preco p').innerText = `R$ ${data.preco / 100}` 
-    document.querySelector('.endereco p').innerText = `${data.pais}` 
+    document.querySelector('.endereco p').innerText = `${data.endereco}` 
+    document.querySelector('.descricao .desc p').innerText = `${data.descricao}` 
     
     document.querySelector('.descricao .comprar .diaria')
     .innerText = `${data.dias} ${data.dias > 1 ? 'diárias' : 'diária'}` 
@@ -41,15 +42,6 @@ const showPackage = (data) => {
         span.innerText = `${data.inclui[i]}`
         document.querySelector('.comodidade').appendChild(span)
     } 
-
-    /* OPCOES */
-    for(let i = 0; i < data.opcoes.length; i++){
-        const saida = JSON.parse(data.opcoes[i])
-        const p = document.createElement('p')
-        p.innerText = ` - ${saida.passagem}`
-
-        document.querySelector('.descricao .desc').appendChild(p)
-    }
 }
 
 const reservar = async (e) => {
@@ -65,4 +57,4 @@ function sleep(ms){
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-urlParams.get('id') ? searchPackage() : window.location.href = '../index.html'
+urlParams.get('id') ? searchActivity() : window.location.href = '../index.html'

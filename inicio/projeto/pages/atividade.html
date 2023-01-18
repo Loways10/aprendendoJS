@@ -120,7 +120,7 @@
         /* IMG  */
         body .img{
             display: grid;
-            grid-template-columns: repeat(5);
+            grid-template-columns: repeat(4);
             grid-template-rows: repeat(4);
             gap: 5px;
         }
@@ -144,7 +144,7 @@
 
         body .img div:nth-child(2){
             grid-column-start: 3;
-            grid-column-end: 5;
+            grid-column-end: 4;
             grid-row-start: 1;
             grid-row-end: 3;
         }
@@ -156,12 +156,6 @@
             grid-row-end: 4;
         }
 
-        body .img div:nth-child(4){
-            grid-column-start: 4;
-            grid-column-end: 5;
-            grid-row-start: 3;
-            grid-row-end: 4;
-        }
 
         body .img div img{
             width: 100%;
@@ -180,8 +174,9 @@
         header nav ul li a{
             color: black;
         }
+
     </style>
-    <title>Hotel</title>
+    <title>Atividade</title>
 </head>
 <body>
     <header>
@@ -205,7 +200,9 @@
     <div class="endereco"><p></p></div>
     <div class="img"></div>
     <div class="descricao">
-        <div class="desc"><p></p></div>
+        <div class="desc">
+            <h3>Saídas</h3>
+        </div>
         <div class="comprar">
             <p class="diaria"></p>
             <p class="valor"></p>
@@ -221,6 +218,6 @@
             <p>Reserva efetuada com sucesso!</p>
         </div>
     </div>
-    <script src="hotel.js"></script>
+    <script src="atividade.js"></script>
 </body>
 </html>
